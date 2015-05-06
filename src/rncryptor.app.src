@@ -1,0 +1,12 @@
+{application, rncryptor,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { rncryptor_app, []}},
+  {env, []}
+ ]}.

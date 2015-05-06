@@ -1,0 +1,11 @@
+
+@author Paul Rogers <paul@dingosky.com>
+@copyright 2015 Dingo Sky, LLC
+@version 1.0.0
+@title Erlang RNCryptor V3
+@doc Erlang implementation for RNCryptor, a cross-language AES
+Encryptor/Decryptor data format. See Rob Napier's <a
+href="https://github.com/RNCryptor">RNCryptor</a> and <a
+href="https://github.com/RNCryptor/RNCryptor-Spec">RNCryptor Spec</a> sites for
+more information.
+
