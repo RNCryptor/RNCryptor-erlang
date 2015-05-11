@@ -1,12 +1,9 @@
 {application, rncryptor,
- [
-  {description, ""},
-  {vsn, "1"},
-  {registered, []},
-  {applications, [
-                  kernel,
-                  stdlib
-                 ]},
-  {mod, { rncryptor_app, []}},
-  {env, []}
+ [{description, "RNCryptor v3 library"}
+ ,{vsn, "1.0.0"}
+ ,{registered, []}
+ ,{applications,
+    [kernel,stdlib]}
+ ,{env,[]}
+ ,{modules, []}
  ]}.

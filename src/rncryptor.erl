@@ -1,23 +1,36 @@
+-module(rncryptor).
 %%
 %% @author Paul Rogers <paul@dingosky.com>
 %%
-%% @doc AES256 encryptions and decryption using the RNCryptor data format.
+%% @doc RNCryptor v3 encryption and decryption
 %%
--module(rncryptor).
-
 -author("paul@dingosky.com").
 
+%%======================================================================================
+%% API functions
+%%======================================================================================
 -export([encrypt/2, encrypt/3]).
 -export([decrypt/2, decrypt/3]).
 
--export([encrypt_key/4]).
-
--export([encrypt_pw/2, encrypt_pw/4, encrypt_pw/6]).
+-export([encrypt_pw/2, encrypt_pw/4]).
 -export([decrypt_pw/2]).
 
-%%
+%%======================================================================================
+%% Exposed testing functions
+%%======================================================================================
+-export([encrypt_key/4]).
+-export([encrypt_pw/6]).
+
+%%======================================================================================
+%% RN header value constants
+%%======================================================================================
+-define(RN_V3,      3).
+-define(RN_OPT_KEY, 0).
+-define(RN_OPT_PW,  1).
+
+%%======================================================================================
 %% Sizes in bytes
-%%
+%%======================================================================================
 -define(AES_KEY_SIZE_128, 16).
 -define(AES_KEY_SIZE_256, 32).
 
@@ -30,6 +43,9 @@
 
 -define(AES256_IVEC_SIZE, 16).
 
+%%======================================================================================
+%% Defined types
+%%======================================================================================
 -type salt64()    :: <<_:8>>.
 -type key128()    :: <<_:16>>.
 -type key256()    :: <<_:32>>.
@@ -41,13 +57,6 @@
 -type rnheader()  :: [rnversion() | rnoptions()].
 -type rncryptor() :: [rnheader() | salt64() | salt64() | block256() | binary() | key256()] | [rnheader() | block256() | binary() | key256()].
 -type rnpacket()  :: [hmac_key() | rncryptor()].
-
-%%
-%% RN header values
-%%
--define(RN_V3,      3).
--define(RN_OPT_KEY, 0).
--define(RN_OPT_PW,  1).
 
 %%======================================================================================
 %%
