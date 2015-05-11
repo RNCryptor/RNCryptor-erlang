@@ -46,9 +46,9 @@ As show in the **Basic Key-based Usage** above, **RNCryptor Erlang** adds a mino
 ### Development Environment
  * Developed on Mac OS X 10.10 using Erlang 17.5.
  * Requires <a href="https://github.com/rebar/rebar">rebar</a> to:
-    * **make** : _Compile_
-    * **make test** : _Run tests_
-    * **make doc** : _Generate documentation_
+    * **rebar co** : _Compile_
+    * **rebar eu** : _Run eunit tests_
+    * **rebar doc** : _Generate documentation_
 
 
 ### Licence
