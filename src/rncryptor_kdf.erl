@@ -1,5 +1,6 @@
+-module(rncryptor_kdf).
 %%
-%% @author Paul Rogers <paul@dingosky.com>
+%% @author Paul Rogers <paul@knoxen.com>
 %%
 %% @doc Derive PassKey from Password using Key Derivation Function. RNCryptor V3 only
 %% supports the KDF PBKDF2 using SHA1.
@@ -7,9 +8,7 @@
 %% @reference <a href="https://tools.ietf.org/html/rfc2898#section-5.2">IETF
 %% RFC 2898 Section 5.2</a>
 %%
--module(rncryptor_kdf).
-
--author("paul@dingosky.com").
+-author("paul@knoxen.com").
 
 -export([pbkdf2/1, pbkdf2/2, pbkdf2/3, pbkdf2/4]).
 

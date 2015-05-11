@@ -1,18 +1,17 @@
+-module(rncryptor_util).
 %%
-%% @author Paul Rogers <paul@dingosky.com>
+%% @author Paul Rogers <paul@knoxen.com>
 %%
 %% @doc Miscellaneous utilities
 %%
--module(rncryptor_util).
-
--author("paul@dingosky.com").
+-author("paul@knoxen.com").
 
 -export([ceil/1]).
 -export([enpad/1, depad/1]).
 -export([const_compare/2]).
 -export([bin_to_hex/1, hex_to_bin/1]).
 
--define(AES256_BLOCK_SIZE, 16).    %%  128-bit
+-define(AES256_BLOCK_SIZE, 16).    %%  AES uses 128-bit blocks (regardless of key size)
 
 %%======================================================================================
 %%

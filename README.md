@@ -54,7 +54,7 @@ As show in the **Basic Key-based Usage** above, **RNCryptor Erlang** adds a mino
 ### Licence
 The MIT License (MIT)
 
-Copyright (c) 2015 DingoSky, LLC
+Copyright (c) 2015 Knoxen, LLC
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

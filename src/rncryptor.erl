@@ -1,10 +1,10 @@
 -module(rncryptor).
 %%
-%% @author Paul Rogers <paul@dingosky.com>
+%% @author Paul Rogers <paul@knoxen.com>
 %%
 %% @doc RNCryptor v3 encryption and decryption
 %%
--author("paul@dingosky.com").
+-author("paul@knoxen.com").
 
 %%======================================================================================
 %% API functions
