@@ -1,9 +1,7 @@
--module(rncryptor).
-%%
-%% @author Paul Rogers <paul@knoxen.com>
 %%
 %% @doc RNCryptor v3 encryption and decryption
 %%
+-module(rncryptor).
 -author("paul@knoxen.com").
 
 %%======================================================================================
@@ -65,8 +63,8 @@
 %%======================================================================================
 
 %%--------------------------------------------------------------------------------------
-%% @doc Encrypt plaintext with given key. The Hmac key created for signing the
-%% RNCryptor will have the same byte length as the encryption key.
+%% @doc Encrypt plaintext with given key. The auto-generated hmac key created
+%% for signing will have the same byte length as the specified encryption key.
 %%
 -spec encrypt(Key, PlainText) -> RNPacket | {error, Reason} when
     Key       :: aes_key(),
@@ -98,7 +96,6 @@ encrypt(<<_Key/binary>>, _PlainText) ->
     RNCryptor :: rncryptor(),
     Reason    :: string().
 %%--------------------------------------------------------------------------------------
-
 encrypt(<<Key/binary>>, <<HmacKey/binary>>, <<PlainText/binary>>) ->
   case byte_size(Key) of
     KeySize when KeySize =:= ?AES_KEY_SIZE_128;

@@ -1,9 +1,7 @@
--module(rncryptor_util).
-%%
-%% @author Paul Rogers <paul@knoxen.com>
 %%
 %% @doc Miscellaneous utilities
 %%
+-module(rncryptor_util).
 -author("paul@knoxen.com").
 
 -export([ceil/1]).
@@ -99,7 +97,8 @@ depad(Bin) ->
 %%
 %%======================================================================================
 %% @doc Compare two binaries for equality, bit-by-bit, without short-circuits
-%% to avoid timing differences.
+%% to avoid timing differences. Note this function does short-circuit to
+%% <code>false</code> if the binaries are not of equal size.
 %% 
 -spec const_compare(Bin1, Bin2) -> boolean() when
     Bin1 :: binary(),

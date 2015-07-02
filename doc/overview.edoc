@@ -1,6 +1,6 @@
 
-@author Paul Rogers <paul@dingosky.com>
-@copyright 2015 Dingo Sky, LLC
+@author Paul Rogers <paul@knoxen.com>
+@copyright 2015 Knoxen, LLC
 @version 1.0.0
 @title Erlang RNCryptor V3
 @doc Erlang implementation for RNCryptor, a cross-language AES

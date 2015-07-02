@@ -1,13 +1,11 @@
--module(rncryptor_kdf).
 %%
-%% @author Paul Rogers <paul@knoxen.com>
-%%
-%% @doc Derive PassKey from Password using Key Derivation Function. RNCryptor V3 only
-%% supports the KDF PBKDF2 using SHA1.
+%% @doc Derive PassKey from Password using Key Derivation Function. RNCryptor V3 specifies 
+%% using PBKDF2 with SHA1.
 %%
 %% @reference <a href="https://tools.ietf.org/html/rfc2898#section-5.2">IETF
 %% RFC 2898 Section 5.2</a>
 %%
+-module(rncryptor_kdf).
 -author("paul@knoxen.com").
 
 -export([pbkdf2/1, pbkdf2/2, pbkdf2/3, pbkdf2/4]).
@@ -17,10 +15,14 @@
 -define(PBKDF2_DEFAULT_KEY_SIZE,     32).
 -define(PBKDF2_SHA1_SIZE,            20).
 
-%%--------------------------------------------------------------------------------------
-%% @doc Generate random salt and derived PassKey using default number of rounds and
-%% key size.
 %%
+%% @doc Generate random salt and derived PassKey using default number of rounds and
+%% key size. 
+%%   <ul>
+%%     <li>Random salt : 8 bytes</li>
+%%     <li>Rounds : 10,000</li>
+%%     <li>Key size : 32 bytes</li>
+%%   </ul>
 -spec pbkdf2(Password) -> {Salt, PassKey} when
     Password   :: binary(),
     Salt       :: binary(),
@@ -33,6 +35,10 @@ pbkdf2(Password) ->
 %%--------------------------------------------------------------------------------------
 %% @doc Derive PassKey using salt and default number of rounds and key size.
 %%
+%%   <ul>
+%%     <li>Rounds : 10,000</li>
+%%     <li>Key size : 32 bytes</li>
+%%   </ul>
 -spec pbkdf2(Password, Salt) -> PassKey when
     Password   :: binary(),
     Salt       :: binary(),
@@ -44,6 +50,9 @@ pbkdf2(Password, Salt) ->
 %%--------------------------------------------------------------------------------------
 %% @doc Derive PassKey using salt, number of rounds, and default key size.
 %%
+%%   <ul>
+%%     <li>Rounds : 10,000</li>
+%%   </ul>
 -spec pbkdf2(Password, Salt, Rounds) -> PassKey when
     Password   :: binary(),
     Salt       :: binary(),
