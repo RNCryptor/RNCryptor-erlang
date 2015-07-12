@@ -59,13 +59,15 @@ enpad(Bin, Len) ->
 %%
 %% The last byte of the binary is the pad hex digit. Per <a
 %% href="https://tools.ietf.org/html/rfc5652#section-6.3">RFC 5652 Section
-%% 6.3</a>, "all input is padded, including input values that are already a
-%% multiple of the block size", i.e., there should be a padding of k values of
-%% k when len mod k = 0. However, if len mod k = 0 AND the last byte is greater
-%% than k, padding with k values of k can be viewed as being superfluous since
-%% the last byte is unambiguously not a padding value.  Some implementations
-%% don't add padding in this case, i.e. if the last byte is greater than k we
-%% interpret as no padding.
+%% 6.3</a>, "<em>all input is padded, including input values that are already a
+%% multiple of the block size</em>", i.e., there should be a padding of
+%% <strong>k</strong> values of <strong>k</strong> when <code>len mod k =
+%% 0</code>. However, if <code>len mod k = 0</code> AND the last byte is
+%% greater than <strong>k</strong>, padding with <strong>k</strong> values of
+%% <strong>k</strong> can be viewed as superfluous since the last byte can be
+%% unambiguously interpreted as not a padding value.  Some implementations
+%% don't add padding in this case, i.e. if the last byte is greater than
+%% <strong>k</strong> we interpret as no padding.
 %% 
 -spec depad(Padded :: binary()) -> Bin | {error, Reason} when
     Bin    :: binary(),
