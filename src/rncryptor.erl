@@ -63,8 +63,8 @@
 %%======================================================================================
 
 %%--------------------------------------------------------------------------------------
-%% @doc Encrypt plaintext with given key. The auto-generated hmac key created
-%% for signing will have the same byte length as the specified encryption key.
+%% @doc Encrypt plaintext with given key. A random 32-bit hmac key used for signing is
+%% prepended to the RNCryptor to form the return packet.
 %%
 -spec encrypt(Key, PlainText) -> RNPacket | {error, Reason} when
     Key       :: aes_key(),
@@ -74,7 +74,7 @@
 %%--------------------------------------------------------------------------------------
 encrypt(<<Key/binary>>, <<PlainText/binary>>) ->
   %% HmacKey len set equal to Key len
-  HmacKey = crypto:rand_bytes(byte_size(Key)),
+  HmacKey = crypto:rand_bytes(?HMAC_SHA256_SIZE),
   case encrypt(Key, HmacKey, PlainText) of
     {error, Reason} ->
       {error, Reason};
@@ -143,8 +143,8 @@ encrypt_key(_Key, _IVec, _HmacKey, _PlainText) ->
 %%======================================================================================
 
 %%--------------------------------------------------------------------------------------
-%% @doc Decrypt packet with given key. The packet hmac key must be the same length as
-%% the encryption key.
+%% @doc Decrypt packet with given key. The first 32-bits of the packet are used to check
+%% the mac value for the RNCryptor.
 %%
 -spec decrypt(Key, RNPacket) -> PlainText | {error, Reason} when
     Key       :: aes_key(),
@@ -153,9 +153,8 @@ encrypt_key(_Key, _IVec, _HmacKey, _PlainText) ->
     Reason    :: string().
 %%--------------------------------------------------------------------------------------
 decrypt(<<Key/binary>>, <<RNPacket/binary>>) ->
-  HmacKeyLen = byte_size(Key),
   case RNPacket of
-    <<HmacKey:HmacKeyLen/binary, RNCryptor/binary>> ->
+    <<HmacKey:?HMAC_SHA256_SIZE/binary, RNCryptor/binary>> ->
       decrypt(Key, HmacKey, RNCryptor);
     _ ->
       {error, "Invalid RN packet"}
@@ -168,7 +167,7 @@ decrypt(_, _) ->
   {error, "Invalid args"}.
 
 %%--------------------------------------------------------------------------------------
-%% @doc Use hmac key to verify signing of rncryptor, then decrypt rncryptor with key.
+%% @doc Use hmac key to verify signing of rncryptor, then decrypt the RNCryptor with key.
 %%
 -spec decrypt(Key, HmacKey, RNCryptor) -> PlainText | {error, Reason} when
     Key       :: aes_key(),

@@ -53,37 +53,37 @@ ietf_rfc_6070_vector_6_test() ->
 %%    https://github.com/RNCryptor/RNCryptor-Spec/blob/master/vectors/v3/kdf
 %%---------------------------------------------------------------------------------------
 
-rn_spec_v3_vector_1_test() ->
+rn_spec_v3_one_byte_test() ->
   Password = <<"a">>,
   Salt = rncryptor_util:hex_to_bin("0102030405060708"),
   Expected = "FC632B0CA6B23EFF9A9DC3E0E585167F5A328916ED19F83558BE3BA9828797CD",
   test_pbkdf2(Password, Salt, Expected).
 
-rn_spec_v3_vector_2_test() ->
+rn_spec_v3_short_password_test() ->
   Password = <<"thepassword">>,
   Salt = rncryptor_util:hex_to_bin("0203040506070801"),
   Expected = "0EA84F5252310DC3E3A7607C33BFD1EB580805FB68293005DA21037CCF499626",
   test_pbkdf2(Password, Salt, Expected).
 
-rn_spec_v3_vector_3_test() ->
+rn_spec_v3_passphrase_test() ->
   Password = <<"this is a bit longer password">>,
   Salt = rncryptor_util:hex_to_bin("0304050607080102"),
   Expected = "71343ACB1E9675B016AC65DCFE5DDAC2E57ED9C35565FDBB2DD6D2CEFE263D5B",
   test_pbkdf2(Password, Salt, Expected).
 
-rn_spec_v3_vector_4_test() ->
+rn_spec_v3_long_passphrase_test() ->
   Password = <<"$$$it was the epoch of belief, it was the epoch of incredulity; it was the season of Light, it was the season of Darkness; it was the spring of hope, it was the winter of despair; we had everything before us, we had nothing before us; we were all going directly to Heaven, we were all going the other way.">>,
   Salt = rncryptor_util:hex_to_bin("0405060708010203"),
   Expected = "11B52C50CBF45BE6A636A3142B8C30B85A6244814A7D43E37457F38DE46C6735",
   test_pbkdf2(Password, Salt, Expected).
 
-rn_spec_v3_vector_5_test() ->
+rn_spec_v3_multibyte_test() ->
   Password = rncryptor_util:hex_to_bin("E4B8ADE69687E5AF86E7A081"),
   Salt = rncryptor_util:hex_to_bin("0506070801020304"),
   Expected = "D2FC3237D4A69668CA83D969C2CDA1AC6C3684792B6644B1A90B2052007215DD",
   test_pbkdf2(Password, Salt, Expected).
 
-rn_spec_v3_vector_6_test() ->
+rn_spec_v3_mixed_language_test() ->
   P1 = rncryptor_util:hex_to_bin("E4B8ADE69687E5AF86E7A081"),
   P2 = <<" with a little English, too.">>,
   Password = << P1/binary, P2/binary >>,
