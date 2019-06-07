@@ -13,3 +13,5 @@ rel/example_project
 
 # emacs
 *~
+/_build
+/.vscode
