@@ -79,7 +79,7 @@
 %%--------------------------------------------------------------------------------------
 encrypt(<<Key/binary>>, <<PlainText/binary>>) ->
   %% HmacKey len set equal to Key len
-  HmacKey = crypto:rand_bytes(?HMAC_SHA256_SIZE),
+  HmacKey = crypto:strong_rand_bytes(?HMAC_SHA256_SIZE),
   case encrypt(Key, HmacKey, PlainText) of
     {error, Reason} ->
       {error, Reason};
@@ -105,7 +105,7 @@ encrypt(<<Key/binary>>, <<HmacKey/binary>>, <<PlainText/binary>>) ->
   case byte_size(Key) of
     KeySize when KeySize =:= ?AES_KEY_SIZE_128;
                  KeySize =:= ?AES_KEY_SIZE_256 ->
-      IVec = crypto:rand_bytes(?AES256_IVEC_SIZE),
+      IVec = crypto:strong_rand_bytes(?AES256_IVEC_SIZE),
       encrypt_key(Key, IVec, HmacKey, PlainText);
     _ ->
       {error, "Invalid encryption key len"}
@@ -246,7 +246,7 @@ encrypt_pw(Password, KdfSalt, HmacSalt, PlainText) ->
 %% @private
 %%--------------------------------------------------------------------------------------
 encrypt_pw(KdfSalt, KdfKey, HmacSalt, HmacKey, PlainText) ->
-  IVec = crypto:rand_bytes(?AES256_IVEC_SIZE),
+  IVec = crypto:strong_rand_bytes(?AES256_IVEC_SIZE),
   encrypt_pw(KdfSalt, KdfKey, IVec, HmacSalt, HmacKey, PlainText).
 
 %%--------------------------------------------------------------------------------------
@@ -319,8 +319,8 @@ parse_key_cryptor(<<HmacKey/binary>>, <<RNCryptor/binary>>) ->
 
 %% @private
 parse_pw_cryptor(Password, <<RNCryptor/binary>>) ->
-  case RNCryptor of 
-    <<?RN_V3, ?RN_OPT_PW, KdfSalt:?KDF_SALT_SIZE/binary, HmacSalt:?HMAC_SALT_SIZE/binary, IVec:?AES256_IVEC_SIZE/binary, _Rest/binary>> -> 
+  case RNCryptor of
+    <<?RN_V3, ?RN_OPT_PW, KdfSalt:?KDF_SALT_SIZE/binary, HmacSalt:?HMAC_SALT_SIZE/binary, IVec:?AES256_IVEC_SIZE/binary, _Rest/binary>> ->
       HmacKey = rncryptor_kdf:pbkdf2(Password, HmacSalt),
       case hmac_challenge(HmacKey, RNCryptor) of
         {ok, RNData} ->
@@ -333,8 +333,8 @@ parse_pw_cryptor(Password, <<RNCryptor/binary>>) ->
       end;
     _ ->
       {error, "Invalid password-based RN cryptor"}
-  end.  
-      
+  end.
+
 %% @private
 hmac_challenge(HmacKey, RNCryptor) ->
   RNSize  = erlang:byte_size(RNCryptor),

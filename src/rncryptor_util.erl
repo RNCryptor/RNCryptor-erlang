@@ -151,7 +151,9 @@ hex_to_bin(S) when is_list(S) ->
 hex_to_bin(B) when is_binary(B) ->
   hex_to_bin(binary_to_list(B), []).
 
+%%--------------------------------------------------------------------------------------
 %% @private
+%%--------------------------------------------------------------------------------------
 hex_to_bin([], Acc) ->
   list_to_binary(lists:reverse(Acc));
 hex_to_bin([X,Y|T], Acc) ->

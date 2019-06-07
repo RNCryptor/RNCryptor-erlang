@@ -1,5 +1,5 @@
 %%
-%% @doc Derive PassKey from Password using Key Derivation Function. RNCryptor V3 specifies 
+%% @doc Derive PassKey from Password using Key Derivation Function. RNCryptor V3 specifies
 %% using PBKDF2 with SHA1.
 %%
 %% @reference <a href="https://tools.ietf.org/html/rfc2898#section-5.2">IETF
@@ -17,7 +17,7 @@
 
 %%
 %% @doc Generate random salt and derived PassKey using default number of rounds and
-%% key size. 
+%% key size.
 %%   <ul>
 %%     <li>Random salt : 8 bytes</li>
 %%     <li>Rounds : 10,000</li>
@@ -29,7 +29,7 @@
     PassKey    :: binary().
 %%--------------------------------------------------------------------------------------
 pbkdf2(Password) ->
-  Salt = crypto:rand_bytes(?PBKDF2_DEFAULT_SALT_SIZE),
+  Salt = crypto:strong_rand_bytes(?PBKDF2_DEFAULT_SALT_SIZE),
   {Salt, pbkdf2(Password, Salt)}.
 
 %%--------------------------------------------------------------------------------------
