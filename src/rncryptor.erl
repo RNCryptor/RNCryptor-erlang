@@ -45,16 +45,21 @@
 %% Defined types
 %%======================================================================================
 -type salt64()    :: <<_:8>>.
+-type aes_block() :: <<_:16>>.
 -type key128()    :: <<_:16>>.
 -type key256()    :: <<_:32>>.
--type block256()  :: <<_:32>>.
 -type aes_key()   :: key128() | key256().
--type hmac_key()  :: key128() | key256().
+-type hmac_key()  :: key256().
+-type hmac_sig()  :: <<_:32>>.
+
 -type rnversion() :: <<_:1>>.
 -type rnoptions() :: <<_:1>>.
 -type rnheader()  :: [rnversion() | rnoptions()].
--type rncryptor() :: [rnheader() | salt64() | salt64() | block256() | binary() | key256()] | [rnheader() | block256() | binary() | key256()].
--type rnpacket()  :: [hmac_key() | rncryptor()].
+
+-type rn_pw_cryptor()  :: [rnheader() | salt64() | salt64() | aes_block() | binary() | hmac_sig()].
+-type rn_key_cryptor() :: [rnheader() | aes_block() | binary() | hmac_sig()].
+-type rncryptor()      :: rn_pw_cryptor() | rn_key_cryptor().
+-type rnpacket()       :: [hmac_key() | rncryptor()].
 
 %%======================================================================================
 %%
@@ -251,7 +256,7 @@ encrypt_pw(KdfSalt, KdfKey, HmacSalt, HmacKey, PlainText) ->
 -spec encrypt_pw(KdfSalt, KdfKey, IVec, HmacSalt, HmacKey, PlainText) -> RNCryptor when
     KdfSalt   :: salt64(),
     KdfKey    :: key256(),
-    IVec      :: block256(),
+    IVec      :: aes_block(),
     HmacSalt  :: salt64(),
     HmacKey   :: key256(),
     PlainText :: binary(),
