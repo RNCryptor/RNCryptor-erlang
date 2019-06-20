@@ -134,7 +134,8 @@ encrypt(_, _, _) ->
 %%--------------------------------------------------------------------------------------
 encrypt_key(<<Key/binary>>,     <<IVec:?AES256_IVEC_SIZE/binary>>,
             <<HmacKey/binary>>, <<PlainText/binary>>) ->
-  CipherText = crypto:block_encrypt(aes_cbc256, Key, IVec, rncryptor_util:enpad(PlainText)),
+  CipherIV = cipher_iv(byte_size(Key)),
+  CipherText = crypto:block_encrypt(CipherIV, Key, IVec, rncryptor_util:enpad(PlainText)),
   Message = <<?RN_V3, ?RN_OPT_KEY, IVec/binary, CipherText/binary>>,
   RNHmac = crypto:hmac(sha256, HmacKey, Message, ?HMAC_SHA256_SIZE),
   <<Message/binary, RNHmac/binary>>;
@@ -186,7 +187,8 @@ decrypt(<<Key/binary>>, <<HmacKey/binary>>, <<RNCryptor/binary>>)
        byte_size(Key) =:= ?AES_KEY_SIZE_256 ->
   case parse_key_cryptor(HmacKey, RNCryptor) of
     {ok, IVec, CipherText} ->
-      PaddedText = crypto:block_decrypt(aes_cbc256, Key, IVec, CipherText),
+      CipherIV = cipher_iv(byte_size(Key)),
+      PaddedText = crypto:block_decrypt(CipherIV, Key, IVec, CipherText),
       rncryptor_util:depad(PaddedText);
     Error ->
       Error
@@ -263,7 +265,8 @@ encrypt_pw(KdfSalt, KdfKey, HmacSalt, HmacKey, PlainText) ->
     RNCryptor :: rncryptor().
 %%--------------------------------------------------------------------------------------
 encrypt_pw(KdfSalt, KdfKey, IVec, HmacSalt, HmacKey, PlainText) ->
-  CipherText = crypto:block_encrypt(aes_cbc256, KdfKey, IVec, rncryptor_util:enpad(PlainText)),
+  CipherIV = cipher_iv(byte_size(KdfKey)),
+  CipherText = crypto:block_encrypt(CipherIV, KdfKey, IVec, rncryptor_util:enpad(PlainText)),
   RNData = <<?RN_V3, ?RN_OPT_PW, KdfSalt/binary, HmacSalt/binary, IVec/binary, CipherText/binary>>,
   RNHmac = crypto:hmac(sha256, HmacKey, RNData, ?HMAC_SHA256_SIZE),
   <<RNData/binary, RNHmac/binary>>.
@@ -288,7 +291,8 @@ decrypt_pw(<<>>, _RNCryptor) ->
 decrypt_pw(Password, <<RNCryptor/binary>>) ->
   case parse_pw_cryptor(Password, RNCryptor) of
     {ok, KdfKey, IVec, CipherText} ->
-      PaddedText = crypto:block_decrypt(aes_cbc256, KdfKey, IVec, CipherText),
+      CipherIV = cipher_iv(byte_size(KdfKey)),
+      PaddedText = crypto:block_decrypt(CipherIV, KdfKey, IVec, CipherText),
       rncryptor_util:depad(PaddedText);
     Error ->
       Error
@@ -347,3 +351,7 @@ hmac_challenge(HmacKey, RNCryptor) ->
     false ->
       {error, "Invalid Hmac"}
   end.
+
+cipher_iv(16) -> aes_128_cbc;
+cipher_iv(24) -> aes_192_cbc;
+cipher_iv(32) -> aes_256_cbc.
