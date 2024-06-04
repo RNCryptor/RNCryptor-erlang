@@ -58,8 +58,8 @@
 
 -type rn_pw_cryptor()  :: [rnheader() | salt64() | salt64() | aes_block() | binary() | hmac_sig()].
 -type rn_key_cryptor() :: [rnheader() | aes_block() | binary() | hmac_sig()].
--type rncryptor()      :: rn_pw_cryptor() | rn_key_cryptor().
--type rnpacket()       :: [hmac_key() | rncryptor()].
+-type rncryptor()      :: rn_pw_cryptor() | rn_key_cryptor() | binary().
+-type rnpacket()       :: [hmac_key() | rncryptor()] | binary().
 
 %%======================================================================================
 %%
@@ -138,7 +138,7 @@ encrypt_key(<<Key/binary>>,     <<IVec:?AES256_IVEC_SIZE/binary>>,
   PaddedText = rncryptor_util:enpad(PlainText),
   CipherText = crypto:crypto_one_time(CipherIV, Key, IVec, PaddedText, true),
   Message = <<?RN_V3, ?RN_OPT_KEY, IVec/binary, CipherText/binary>>,
-  RNHmac = crypto:hmac(sha256, HmacKey, Message, ?HMAC_SHA256_SIZE),
+  RNHmac = crypto:macN(hmac, sha256, HmacKey, Message, ?HMAC_SHA256_SIZE),
   <<Message/binary, RNHmac/binary>>;
 encrypt_key(_Key, _IVec, _HmacKey, _PlainText) ->
   {error, "Invalid arguments"}.
@@ -270,7 +270,7 @@ encrypt_pw(KdfSalt, KdfKey, IVec, HmacSalt, HmacKey, PlainText) ->
   PaddedText = rncryptor_util:enpad(PlainText),
   CipherText = crypto:crypto_one_time(CipherIV, KdfKey, IVec, PaddedText, true),
   RNData = <<?RN_V3, ?RN_OPT_PW, KdfSalt/binary, HmacSalt/binary, IVec/binary, CipherText/binary>>,
-  RNHmac = crypto:hmac(sha256, HmacKey, RNData, ?HMAC_SHA256_SIZE),
+  RNHmac = crypto:macN(hmac, sha256, HmacKey, RNData, ?HMAC_SHA256_SIZE),
   <<RNData/binary, RNHmac/binary>>.
 
 %%======================================================================================
@@ -346,7 +346,7 @@ hmac_challenge(HmacKey, RNCryptor) ->
   RNSize  = erlang:byte_size(RNCryptor),
   RNData = erlang:binary_part(RNCryptor, {0, RNSize-?HMAC_SHA256_SIZE}),
   RNHmac  = erlang:binary_part(RNCryptor, {RNSize,  -?HMAC_SHA256_SIZE}),
-  Challenge = crypto:hmac(sha256, HmacKey, RNData, ?HMAC_SHA256_SIZE),
+  Challenge = crypto:macN(hmac, sha256, HmacKey, RNData, ?HMAC_SHA256_SIZE),
   case rncryptor_util:const_compare(RNHmac, Challenge) of
     true ->
       {ok, RNData};

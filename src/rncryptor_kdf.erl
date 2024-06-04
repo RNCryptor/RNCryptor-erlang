@@ -82,7 +82,7 @@ pbkdf2(Password, Salt, Rounds, KeySize) ->
 %%======================================================================================
 %% @private
 pbkdf2_key(Password, Salt, Rounds, KeySize, BlockNum, PassKey) ->
-  InitBlock = crypto:hmac(sha, Password, <<Salt/binary, BlockNum:32/integer>>, ?PBKDF2_SHA1_SIZE),
+  InitBlock = crypto:macN(hmac, sha, Password, <<Salt/binary, BlockNum:32/integer>>, ?PBKDF2_SHA1_SIZE),
   BlockKey = pbkdf2_block_key(Password, Rounds, 2, InitBlock, InitBlock),
   NumBlocks = rncryptor_util:ceil(KeySize / ?PBKDF2_SHA1_SIZE),
   case BlockNum =:= NumBlocks of
@@ -97,7 +97,7 @@ pbkdf2_key(Password, Salt, Rounds, KeySize, BlockNum, PassKey) ->
 pbkdf2_block_key(_Password, Rounds, Round, _PrevBlock, Block) when Round > Rounds ->
   Block;
 pbkdf2_block_key(Password, Rounds, Round, PrevBlock, Block) ->
-  NextBlock = crypto:hmac(sha, Password, PrevBlock, ?PBKDF2_SHA1_SIZE),
+  NextBlock = crypto:macN(hmac, sha, Password, PrevBlock, ?PBKDF2_SHA1_SIZE),
   Block2 = crypto:exor(NextBlock, Block),
   pbkdf2_block_key(Password, Rounds, Round + 1, NextBlock, Block2).
 
